@@ -40,6 +40,13 @@ const trimSlashes = (value: string): string => value.replace(/^\/+|\/+$/gu, '');
 
 const defaultTimeoutMs = 8000;
 
+export const normalizeEchoLinkToken = (token: string): string => (
+  token
+    .trim()
+    .replace(/^Bearer\s+/iu, '')
+    .trim()
+);
+
 export const normalizeEchoLinkHost = (host: string): string => {
   const trimmed = host.trim();
   if (!trimmed) {
@@ -54,7 +61,7 @@ const describeNetworkError = (error: unknown, url: string): EchoLinkNetworkError
   const message = rawMessage.toLowerCase();
   if (error instanceof Error && error.name === 'AbortError') {
     return new EchoLinkNetworkError(
-      `连接超时：${url}。请确认 iPhone 和电脑在同一 Wi-Fi，电脑端 ECHO Link 已开启，并允许 Windows 防火墙放行 ECHO NEXT。`,
+      `连接超时：${url}。请确认 iPhone 和电脑在同一个 Wi-Fi，电脑端 ECHO Link 已开启，并允许 Windows 防火墙放行 ECHO NEXT。`,
       url,
       error,
     );
@@ -68,7 +75,7 @@ const describeNetworkError = (error: unknown, url: string): EchoLinkNetworkError
   }
   if (message.includes('network request failed') || message.includes('fetch failed')) {
     return new EchoLinkNetworkError(
-      `无法连接：${url}。请检查本地网络权限、电脑端服务是否开启，以及是否填入了电脑的局域网 IP。`,
+      `无法连接：${url}。请检查 iPhone 的本地网络权限、电脑端服务是否开启、Windows 防火墙，以及是否填入了电脑的局域网 IP。`,
       url,
       error,
     );
@@ -76,15 +83,27 @@ const describeNetworkError = (error: unknown, url: string): EchoLinkNetworkError
   return new EchoLinkNetworkError(rawMessage, url, error);
 };
 
+const parseResponseBody = (text: string): unknown => {
+  if (!text) {
+    return null;
+  }
+  try {
+    return JSON.parse(text) as unknown;
+  } catch {
+    return text;
+  }
+};
+
 export type EchoLinkClient = ReturnType<typeof createEchoLinkClient>;
 
 export const createEchoLinkClient = (connection: EchoLinkConnection) => {
   const host = normalizeEchoLinkHost(connection.host);
+  const token = normalizeEchoLinkToken(connection.token);
   const baseUrl = `${connection.scheme}://${host}:${connection.port}`;
 
   const requestJson = async <T>(path: string, init: RequestInit = {}, timeoutMs = defaultTimeoutMs): Promise<T> => {
     const headers = new Headers(init.headers);
-    headers.set('Authorization', `Bearer ${connection.token}`);
+    headers.set('Authorization', `Bearer ${token}`);
     headers.set('x-echo-link-version', linkVersion);
     if (init.body && !headers.has('Content-Type')) {
       headers.set('Content-Type', 'application/json');
@@ -107,7 +126,7 @@ export const createEchoLinkClient = (connection: EchoLinkConnection) => {
     }
 
     const text = await response.text();
-    const body = text ? JSON.parse(text) as unknown : null;
+    const body = parseResponseBody(text);
     if (!response.ok) {
       const message = typeof body === 'object' && body && 'message' in body
         ? String((body as { message: unknown }).message)

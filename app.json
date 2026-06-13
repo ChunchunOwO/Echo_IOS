@@ -14,7 +14,7 @@
         "NSLocalNetworkUsageDescription": "ECHO iPhone connects to ECHO NEXT on your local network for playback control and library browsing.",
         "NSBonjourServices": ["_echo-link._tcp"],
         "NSAppTransportSecurity": {
-          "NSAllowsArbitraryLoadsInLocalNetworking": true
+          "NSAllowsLocalNetworking": true
         }
       }
     }

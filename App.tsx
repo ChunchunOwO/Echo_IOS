@@ -19,6 +19,7 @@ import {
   EchoLinkHttpError,
   EchoLinkNetworkError,
   normalizeEchoLinkHost,
+  normalizeEchoLinkToken,
   type EchoLinkConnection,
 } from './src/echoLink/client';
 import type { EchoLinkStatusResponse, EchoLinkTrackPreview } from './src/echoLink/types';
@@ -172,7 +173,7 @@ function EchoLinkApp(): ReactElement {
     const nextConnection = {
       ...connection,
       host: normalizeEchoLinkHost(connection.host),
-      token: connection.token.trim(),
+      token: normalizeEchoLinkToken(connection.token),
       port: Number(connection.port) || 26789,
       scheme: connection.scheme || 'http',
     };
@@ -223,7 +224,7 @@ function EchoLinkApp(): ReactElement {
           >
             <View style={styles.header}>
               <Text style={styles.kicker}>ECHO Link</Text>
-              <Text style={styles.title}>{page === 'connect' ? '连接电脑端' : '音乐控制台'}</Text>
+              <Text style={styles.title}>{page === 'connect' ? '连接电脑端' : '音乐播放'}</Text>
               <Text style={styles.description}>
                 {page === 'connect'
                   ? '用配对链接或手动输入局域网地址，连接你的 ECHO NEXT 桌面端。'
@@ -413,7 +414,7 @@ function EchoLinkApp(): ReactElement {
               onPress={() => setPage('control')}
             >
               <Text style={[styles.dockIcon, page === 'control' ? styles.dockIconActive : null]}>▶</Text>
-              <Text style={[styles.dockLabel, page === 'control' ? styles.dockLabelActive : null]}>控制</Text>
+              <Text style={[styles.dockLabel, page === 'control' ? styles.dockLabelActive : null]}>播放</Text>
             </Pressable>
           </View>
         </View>
