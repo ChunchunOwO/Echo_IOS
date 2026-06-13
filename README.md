@@ -30,7 +30,6 @@ The iPhone app currently focuses on controlling the PC. Phone-side streaming can
 ## Run
 
 ```powershell
-cd app.ios
 npm install
 npm run start
 ```
@@ -50,7 +49,6 @@ You cannot build a working iPhone IPA directly on Windows because Xcode is requi
 To avoid a paid Apple Developer account on a Mac, build an unsigned IPA locally and sign/install it with Sideloadly or AltStore using a free Apple ID:
 
 ```bash
-cd app.ios
 bash scripts/build-unsigned-ipa-for-sideloadly.sh
 ```
 
@@ -65,6 +63,5 @@ Then open Sideloadly, select the IPA, and install it to the iPhone with a free A
 Alternatively, install directly from Xcode with a free Apple ID:
 
 ```bash
-cd app.ios
 bash scripts/build-free-apple-id-with-xcode.sh
 ```

@@ -10,7 +10,11 @@ if [[ "$(uname -s)" != "Darwin" ]]; then
 fi
 
 echo "Installing JavaScript dependencies..."
-npm install
+if [[ -f package-lock.json ]]; then
+  npm ci
+else
+  npm install
+fi
 
 echo "Generating iOS native project..."
 npx expo prebuild --platform ios --clean

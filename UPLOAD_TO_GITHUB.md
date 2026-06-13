@@ -5,19 +5,19 @@ Upload these source files and folders:
 - `.github/workflows/build-ios-unsigned.yml`
 - `.gitattributes`
 - `.gitignore`
-- `app.ios/app.json`
-- `app.ios/App.tsx`
-- `app.ios/package.json`
-- `app.ios/package-lock.json`
-- `app.ios/README.md`
-- `app.ios/tsconfig.json`
-- `app.ios/scripts/`
-- `app.ios/src/`
+- `app.json`
+- `App.tsx`
+- `package.json`
+- `package-lock.json`
+- `README.md`
+- `tsconfig.json`
+- `scripts/`
+- `src/`
 
 Do not upload:
 
-- `app.ios/node_modules/`
-- `app.ios/build/`
+- `node_modules/`
+- `build/`
 - generated `.ipa` files
 
 If GitHub Desktop or a web upload complains about line endings, make sure `.gitattributes` is included first, then re-add the files.
